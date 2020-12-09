@@ -1,18 +1,17 @@
 defmodule Minesweeper do
   @moduledoc """
-  Documentation for `Minesweeper`.
+  Starter application using the Scenic framework.
   """
 
-  @doc """
-  Hello world.
+  def start(_type, _args) do
+    # load the viewport configuration from config
+    main_viewport_config = Application.get_env(:minesweeper, :viewport)
 
-  ## Examples
+    # start the application with the viewport
+    children = [
+      {Scenic, viewports: [main_viewport_config]}
+    ]
 
-      iex> Minesweeper.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
