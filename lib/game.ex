@@ -5,10 +5,9 @@ defmodule Game do
       {x, y}
     end
     mine_list = Enum.take_random(indices, mines)
-    grid = Enum.map(
-      indices,
-      &generate_field(&1, mine_list)
-    )
+    grid = for index <- indices, into: %{} do
+      {index, generate_field(index, mine_list)}
+    end
     grid
   end
 
