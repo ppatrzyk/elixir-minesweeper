@@ -5,15 +5,13 @@ defmodule Game do
       {x, y}
     end
     mine_list = Enum.take_random(indices, mines)
-    grid = for index <- indices, into: %{} do
+    for index <- indices, into: %{} do
       {index, generate_field(index, mine_list)}
     end
-    grid
   end
 
   defp generate_field({x, y}, mine_list) do
-    mine = {x, y} in mine_list
-    %{mine: mine, state: :hidden}
+    %{mine: {x, y} in mine_list, state: :hidden}
   end
 
   defp generate_neighbor({x_delta, y_delta}, {x, y}) do
