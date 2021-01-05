@@ -11,7 +11,16 @@ defmodule Game do
   end
 
   defp generate_field({x, y}, mine_list) do
-    %{mine: {x, y} in mine_list, state: :hidden}
+    mine = {x, y} in mine_list
+    adjacent = get_neighbors({x, y})
+    |> MapSet.new
+    |> MapSet.intersection(MapSet.new(mine_list))
+    |> MapSet.size
+    %{
+      state: :hidden,
+      mine: mine,
+      adjacent: adjacent
+    }
   end
 
   defp generate_neighbor({x_delta, y_delta}, {x, y}) do
