@@ -4,8 +4,16 @@ defmodule Game do
     indices = for x <- 1..width, y <- 1..height do
       {x, y}
     end
-    # TODO implement
-    IO.puts(inspect(indices))
-    [1, 2, 3]
+    mine_list = Enum.take_random(indices, mines)
+    grid = Enum.map(
+      indices,
+      &generate_field(&1, mine_list)
+    )
+    grid
+  end
+
+  defp generate_field({x, y}, mine_list) do
+    mine = {x, y} in mine_list
+    %{mine: mine, state: :hidden}
   end
 end
