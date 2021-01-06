@@ -36,18 +36,11 @@ defmodule Game do
   end
 
   def game_check(game) do
-    try do
-      for {index, field} <- game do
-        cond do
-          field.state == :revealed and field.mine -> throw(:lose)
-          field.s
-        end
-      end
-    catch
-      # todo
-    else
-      # todo
-    end
+    {revealed, hidden} = Enum.split_with(
+      game,
+      fn({_index, field}) -> field.state == :revealed end
+    )
+    {revealed, hidden}
   end
 
 end
