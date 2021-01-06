@@ -36,9 +36,11 @@ defmodule Game do
   end
 
   def reveal(game, {x, y}) do
-    # new_game = %{game | {x, y} => %{game[{x, y}] | :state => :revealed}}
-    fields = do_reveal(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
-    fields
+    indices = do_reveal(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
+    updated_fields = for index <- indices, into: %{} do
+      {index, %{game[index] | :state => :revealed}}
+    end
+    Map.merge(game, updated_fields)
   end
 
   def do_reveal(ignore_neighbors, game, {x, y}) do
