@@ -32,7 +32,7 @@ defmodule Game do
   end
 
   def reveal(game, {x, y}) do
-    # TODO
+    %{game | {x, y} => %{game[{x, y}] | :state => :revealed}}
   end
 
   def game_check(game) do
