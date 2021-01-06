@@ -25,9 +25,29 @@ defmodule Game do
     {x + x_delta, y + y_delta}
   end
 
-  def get_neighbors({x, y}) do
+  defp get_neighbors({x, y}) do
     for x_delta <- -1..1, y_delta <- -1..1 do {x_delta, y_delta} end
     |> Enum.filter(fn(el) -> el != {0, 0} end)
     |> Enum.map(&generate_neighbor(&1, {x, y}))
   end
+
+  def reveal(game, {x, y}) do
+    # TODO
+  end
+
+  def game_check(game) do
+    try do
+      for {index, field} <- game do
+        cond do
+          field.state == :revealed and field.mine -> throw(:lose)
+          field.s
+        end
+      end
+    catch
+      # todo
+    else
+      # todo
+    end
+  end
+
 end
