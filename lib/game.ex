@@ -36,26 +36,19 @@ defmodule Game do
   end
 
   def reveal(game, {x, y}) do
-    new_game = %{game | {x, y} => %{game[{x, y}] | :state => :revealed}}
-
-    neighbors = get_neighbors({x, y})
-    |> Enum.filter(fn({x, y}) -> game[{x, y}].adjacent == 0 end)
-
+    # new_game = %{game | {x, y} => %{game[{x, y}] | :state => :revealed}}
+    do_reveal(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
   end
 
   def do_reveal(ignore_neighbors, game, {x, y}) do
-    # todo this works but it's inefficient
     cond do
       not Map.has_key?(game, {x, y}) -> []
       game[{x, y}].adjacent > 0 or game[{x, y}].mine -> [{x, y}]
-      true -> fn({x, y}) ->
-        current_neigbors = get_neighbors({x, y})
-        [{x, y}] ++ Enum.map(
-          get_neighbors({x, y})
-          |> Enum.filter(fn({x, y}) -> {x, y} not in ignore_neighbors end),
-          &do_reveal(current_neigbors, game, &1)
-        )
-      end
+      true -> [{x, y}] ++ Enum.map(
+        get_neighbors({x, y})
+        |> Enum.filter(fn({x, y}) -> {x, y} not in ignore_neighbors end),
+        &do_reveal(ignore_neighbors |> MapSet.union(get_neighbors({x, y}) |> MapSet.new), game, &1)
+      )
     end
   end
 
