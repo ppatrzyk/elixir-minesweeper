@@ -44,15 +44,10 @@ defmodule Game do
   end
 
   def do_reveal(game, {x, y}) do
-    try do
-      field = game[{x, y}]
-      if not field, do: throw(:no_field)
-      case field.adjacent > 0 or field.mine do
-        true -> [{x, y}]
-        false -> [{x, y}] ++ Enum.map(get_neighbors({x, y}), &do_reveal(game, &1))
-      end
-    catch
-      :no_field -> []
+    cond do
+      not Map.has_key?(game, {x, y}) -> []
+      game[{x, y}].adjacent > 0 or game[{x, y}].mine -> [{x, y}]
+      true -> [{x, y}] ++ Enum.map(get_neighbors({x, y}), &do_reveal(game, &1))
     end
   end
 
