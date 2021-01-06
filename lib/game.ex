@@ -37,7 +37,8 @@ defmodule Game do
 
   def reveal(game, {x, y}) do
     # new_game = %{game | {x, y} => %{game[{x, y}] | :state => :revealed}}
-    do_reveal(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
+    fields = do_reveal(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
+    fields
   end
 
   def do_reveal(ignore_neighbors, game, {x, y}) do
@@ -45,9 +46,15 @@ defmodule Game do
       not Map.has_key?(game, {x, y}) -> []
       game[{x, y}].adjacent > 0 or game[{x, y}].mine -> [{x, y}]
       true -> [{x, y}] ++ Enum.map(
-        get_neighbors({x, y})
-        |> Enum.filter(fn({x, y}) -> {x, y} not in ignore_neighbors end),
-        &do_reveal(ignore_neighbors |> MapSet.union(get_neighbors({x, y}) |> MapSet.new), game, &1)
+        Enum.filter(
+          get_neighbors({x, y}),
+          fn({x, y}) -> {x, y} not in ignore_neighbors end
+        ),
+        &do_reveal(
+          ignore_neighbors |> MapSet.union(get_neighbors({x, y}) |> MapSet.new),
+          game,
+          &1
+        )
       )
     end
   end
