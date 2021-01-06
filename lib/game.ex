@@ -40,7 +40,11 @@ defmodule Game do
       game,
       fn({_index, field}) -> field.state == :revealed end
     )
-    {revealed, hidden}
+    cond do
+      Enum.any?(revealed, fn({_index, field}) -> field.mine end) -> :lose
+      Enum.all?(hidden, fn({_index, field}) -> field.mine end) -> :win
+      true -> :continue
+    end
   end
 
 end
