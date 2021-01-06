@@ -43,12 +43,15 @@ defmodule Game do
 
   end
 
-  def click(game, {x, y}) do
-
-    case game[{x, y}].adjacent == 0 do
+  def do_reveal(game, {x, y}) do
+    is_zero = if game[{x, y}] do
+      game[{x, y}].adjacent == 0
+    else
+      false
+    end
+    case is_zero do
       false -> [{x, y}]
-      true -> get_neighbors({x, y})
-      |> Enum.filter(fn({x, y}) -> game[{x, y}].adjacent == 0 end)
+      true -> Enum.map(get_neighbors({x, y}), &do_reveal(game, &1))
     end
   end
 
