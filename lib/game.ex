@@ -36,14 +36,14 @@ defmodule Game do
   end
 
   def reveal(game, {x, y}) do
-    indices = do_reveal(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
+    indices = get_reveal_fields(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
     updated_fields = for index <- indices, into: %{} do
       {index, %{game[index] | :state => :revealed}}
     end
     Map.merge(game, updated_fields)
   end
 
-  def do_reveal(ignore_neighbors, game, {x, y}) do
+  def get_reveal_fields(ignore_neighbors, game, {x, y}) do
     cond do
       not Map.has_key?(game, {x, y}) -> []
       game[{x, y}].adjacent > 0 or game[{x, y}].mine -> [{x, y}]
@@ -52,7 +52,7 @@ defmodule Game do
           get_neighbors({x, y}),
           fn({x, y}) -> {x, y} not in ignore_neighbors end
         ),
-        &do_reveal(
+        &get_reveal_fields(
           ignore_neighbors |> MapSet.union(get_neighbors({x, y}) |> MapSet.new),
           game,
           &1
