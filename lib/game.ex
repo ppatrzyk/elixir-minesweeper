@@ -31,11 +31,14 @@ defmodule Game do
     |> Enum.map(&generate_neighbor(&1, {x, y}))
   end
 
-  def is_adjacent?({x1, y1}, {x2, y2}) do
-    {x2, y2} in get_neighbors({x1, y1})
+  def reveal(game, {x, y}) do
+    case game[{x, y}].state do
+      :hidden -> do_reveal(game, {x, y})
+      _ -> game
+    end
   end
 
-  def reveal(game, {x, y}) do
+  def do_reveal(game, {x, y}) do
     indices = get_reveal_fields(MapSet.new, game, {x, y}) |> List.flatten |> Enum.uniq
     updated_fields = for index <- indices, into: %{} do
       {index, %{game[index] | :state => :revealed}}
@@ -58,6 +61,14 @@ defmodule Game do
           &1
         )
       )
+    end
+  end
+
+  def flag(game, {x, y}) do
+    case game[{x, y}].state do
+      :revealed -> game
+      :hidden -> %{game | {x, y} => %{game[{x, y}] | :state => :flagged}}
+      :flagged -> %{game | {x, y} => %{game[{x, y}] | :state => :hidden}}
     end
   end
 
