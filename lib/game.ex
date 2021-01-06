@@ -37,13 +37,19 @@ defmodule Game do
 
   def reveal(game, {x, y}) do
     new_game = %{game | {x, y} => %{game[{x, y}] | :state => :revealed}}
-    case game[{x, y}].adjacent == 0 do
-      false -> new_game
-      true ->
-    end
+
     neighbors = get_neighbors({x, y})
     |> Enum.filter(fn({x, y}) -> game[{x, y}].adjacent == 0 end)
 
+  end
+
+  def click(game, {x, y}) do
+
+    case game[{x, y}].adjacent == 0 do
+      false -> [{x, y}]
+      true -> get_neighbors({x, y})
+      |> Enum.filter(fn({x, y}) -> game[{x, y}].adjacent == 0 end)
+    end
   end
 
   def game_check(game) do
