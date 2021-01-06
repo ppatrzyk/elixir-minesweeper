@@ -44,11 +44,13 @@ defmodule Game do
   end
 
   def do_reveal(accumulator, game, {x, y}) do
+    # todo this works but it's inefficient
     cond do
       not Map.has_key?(game, {x, y}) -> []
       game[{x, y}].adjacent > 0 or game[{x, y}].mine -> [{x, y}]
-      true -> Enum.map(
-        get_neighbors({x, y}) |> Enum.filter(fn({x, y}) -> {x, y} not in accumulator end),
+      true -> [{x, y}] ++ Enum.map(
+        get_neighbors({x, y})
+        |> Enum.filter(fn({x, y}) -> {x, y} not in accumulator end),
         &do_reveal([{x, y}] ++ accumulator, game, &1)
       )
     end
