@@ -94,7 +94,7 @@ defmodule Game do
 
   def coord_to_index({coord_x, coord_y}, grid_offset, field_size) do
     {coord_x, coord_y} = {coord_x - grid_offset, coord_y - grid_offset}
-    {floor(coord_x / field_size), floor(coord_y / field_size)}
+    {1 + floor(coord_x / field_size), 1 + floor(coord_y / field_size)}
   end
 
 end
