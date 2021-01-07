@@ -22,7 +22,6 @@ defmodule Minesweeper.Scene.Home do
 
   def init(_, _opts) do
     game = Game.new(%{width: @grid_width, height: @grid_height, mines: @mines})
-    Logger.info(inspect(game))
 
     grid = Enum.map(
       Map.keys(game),
@@ -36,12 +35,27 @@ defmodule Minesweeper.Scene.Home do
       end
     )
 
+    annotations = Enum.map(
+      game,
+      fn({{x, y}, field}) ->
+        str = cond do
+          field.mine -> "*"
+          field.adjacent > 0 -> "#{field.adjacent}"
+          true -> ""
+        end
+        # todo this offset is broken
+        text_spec(str, translate: Game.get_field_translate({x, y}, @field_size))
+      end
+    )
+    Logger.info(annotations)
+
     graph = Graph.build(font: :roboto, font_size: @text_size)
     |> add_specs_to_graph([
       rect_spec({@window_width, @window_height}),
       text_spec(@note, translate: {400, 300}),
       text_spec("Event received:", translate: {400, 350}, id: :testid),
-      group_spec(grid, translate: {@grid_offset, @grid_offset})
+      group_spec(grid, translate: {@grid_offset, @grid_offset}),
+      group_spec(annotations, translate: {@grid_offset, @grid_offset})
     ])
 
     {:ok, graph, push: graph}
