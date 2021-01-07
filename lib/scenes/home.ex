@@ -41,10 +41,21 @@ defmodule Minesweeper.Scene.Home do
     {:ok, @graph, push: @graph}
   end
 
-  def handle_input(event, _context, state) do
-    # graph = Graph.modify(graph, :event, &text(&1, @event_str <> inspect(event)))
-    Logger.info("Received event: #{inspect(event)}")
+  def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, state) do
+    Logger.info("right click captured")
     {:noreply, state}
   end
+
+  def handle_input({:cursor_button, {:left, :release, _, {coord_x, coord_y}}}, _, state) do
+    Logger.info("left click captured")
+    {:noreply, state}
+  end
+
+  def handle_input(_, _, state) do
+    Logger.info("other event")
+    {:noreply, state}
+  end
+
+  # graph = Graph.modify(graph, :event, &text(&1, @event_str <> inspect(event)))
 
 end
