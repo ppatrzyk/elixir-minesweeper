@@ -8,6 +8,7 @@ defmodule Minesweeper.Scene.Home do
 
   @note "Init example scenic"
   @text_size 24
+  @test_str "lala "
 
   @window_width 1024
   @window_height 720
@@ -33,7 +34,7 @@ defmodule Minesweeper.Scene.Home do
   |> add_specs_to_graph([
     rect_spec({@window_width, @window_height}),
     text_spec(@note, translate: {400, 300}),
-    text_spec("Event received:", translate: {400, 350}, id: :event),
+    text_spec("Event received:", translate: {400, 350}, id: :testid),
     group_spec(@grid, translate: {@grid_offset, @grid_offset})
   ])
 
@@ -50,7 +51,9 @@ defmodule Minesweeper.Scene.Home do
   def handle_input({:cursor_button, {:left, :release, _, {coord_x, coord_y}}}, _, state) do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
     Logger.info("left click captured (#{x}, #{y})")
-    {:noreply, state}
+    Logger.info("#{inspect(state)}")
+    state = state |> Graph.modify(:testid, &text(&1, "new text"))
+    {:noreply, state, push: state}
   end
 
   def handle_input(_, _, state) do
