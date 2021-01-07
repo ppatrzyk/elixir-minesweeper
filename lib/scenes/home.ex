@@ -14,9 +14,14 @@ defmodule Minesweeper.Scene.Home do
 
   @grid [
     rect_spec(
-      {50, 60},
-      fill: :khaki,
-      stroke: {4, :green}
+      {30, 30},
+      stroke: {1, :white},
+      translate: {0, 0}
+    ),
+    rect_spec(
+      {30, 30},
+      stroke: {1, :white},
+      translate: {30, 0}
     ),
   ]
 
