@@ -92,4 +92,9 @@ defmodule Game do
     {(x-1)*field_size, (y-1)*field_size}
   end
 
+  def coord_to_index({coord_x, coord_y}, grid_offset, field_size) do
+    {coord_x, coord_y} = {coord_x - grid_offset, coord_y - grid_offset}
+    {floor(coord_x / field_size), floor(coord_y / field_size)}
+  end
+
 end

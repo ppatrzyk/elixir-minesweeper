@@ -31,10 +31,10 @@ defmodule Minesweeper.Scene.Home do
 
   @graph Graph.build(font: :roboto, font_size: @text_size)
   |> add_specs_to_graph([
-    text_spec(@note, translate: {300, 300}),
-    button_spec("Dark", id: :btn_dark, t: {300, 400}, theme: :dark),
-    text_spec("Event received:", translate: {300, 350}, id: :event),
     rect_spec({@window_width, @window_height}),
+    text_spec(@note, translate: {400, 300}),
+    button_spec("Dark", id: :btn_dark, t: {400, 400}, theme: :dark),
+    text_spec("Event received:", translate: {400, 350}, id: :event),
     group_spec(@grid, translate: {@grid_offset, @grid_offset})
   ])
 
@@ -51,6 +51,7 @@ defmodule Minesweeper.Scene.Home do
 
   def filter_event(event, _, graph) do
     graph = Graph.modify(graph, :event, &text(&1, @event_str <> inspect(event)))
+    Logger.info("FILTER: #{inspect(event)}")
     {:cont, event, graph, push: graph}
   end
 end
