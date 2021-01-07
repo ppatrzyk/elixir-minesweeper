@@ -88,4 +88,8 @@ defmodule Game do
     end
   end
 
+  def get_field_translate({x, y}, field_size) do
+    {(x-1)*field_size, (y-1)*field_size}
+  end
+
 end

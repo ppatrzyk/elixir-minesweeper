@@ -21,7 +21,8 @@ defmodule Minesweeper.Scene.Home do
     rect_spec(
       {@field_size, @field_size},
       stroke: {1, :white},
-      translate: {0, 0}
+      translate: {0, 0},
+      lala: 99
     ),
     rect_spec(
       {@field_size, @field_size},
@@ -30,17 +31,25 @@ defmodule Minesweeper.Scene.Home do
     ),
   ]
 
+  @grid Game.get_indices(@grid_width, @grid_height)
+  |> Enum.map(
+    fn({x, y}) ->
+      rect_spec(
+        {@field_size, @field_size},
+        stroke: {1, :white},
+        translate: Game.get_field_translate({x, y}, @field_size),
+        index: {x, y}
+      )
+    end
+  )
+
   @graph Graph.build(font: :roboto, font_size: @text_size)
-    |> add_specs_to_graph([
-      text_spec(@note, translate: {300, 200}),
-      rect_spec({@window_width, @window_height}),
-      group_spec(@grid, translate: {20, 20})
-    ])
+  |> add_specs_to_graph([
+    text_spec(@note, translate: {300, 200}),
+    rect_spec({@window_width, @window_height}),
+    group_spec(@grid, translate: {20, 20})
+  ])
 
-  # ============================================================================
-  # setup
-
-  # --------------------------------------------------------
   def init(_, _opts) do
     {:ok, @graph, push: @graph}
   end
