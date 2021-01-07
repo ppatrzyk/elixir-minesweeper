@@ -33,25 +33,18 @@ defmodule Minesweeper.Scene.Home do
   |> add_specs_to_graph([
     rect_spec({@window_width, @window_height}),
     text_spec(@note, translate: {400, 300}),
-    button_spec("Dark", id: :btn_dark, t: {400, 400}, theme: :dark),
     text_spec("Event received:", translate: {400, 350}, id: :event),
     group_spec(@grid, translate: {@grid_offset, @grid_offset})
   ])
-
-  @event_str "Event received: "
 
   def init(_, _opts) do
     {:ok, @graph, push: @graph}
   end
 
   def handle_input(event, _context, state) do
+    # graph = Graph.modify(graph, :event, &text(&1, @event_str <> inspect(event)))
     Logger.info("Received event: #{inspect(event)}")
     {:noreply, state}
   end
 
-  def filter_event(event, _, graph) do
-    graph = Graph.modify(graph, :event, &text(&1, @event_str <> inspect(event)))
-    Logger.info("FILTER: #{inspect(event)}")
-    {:cont, event, graph, push: graph}
-  end
 end
