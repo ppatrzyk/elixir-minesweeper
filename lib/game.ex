@@ -1,11 +1,15 @@
 defmodule Game do
   def new(%{width: width, height: height, mines: mines}) do
     :random.seed(:erlang.now)
-    indices = for x <- 1..width, y <- 1..height do {x, y} end
+    indices = get_indices(width, height)
     mine_list = Enum.take_random(indices, mines)
     for index <- indices, into: %{} do
       {index, generate_field(index, mine_list)}
     end
+  end
+
+  def get_indices(width, height) do
+    for x <- 1..width, y <- 1..height do {x, y} end
   end
 
   defp generate_field({x, y}, mine_list) do

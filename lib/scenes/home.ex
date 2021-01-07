@@ -12,6 +12,7 @@ defmodule Minesweeper.Scene.Home do
   @window_width 1024
   @window_height 720
   @field_size 30
+
   @grid_width 9
   @grid_height 9
   @mines 10
