@@ -6,6 +6,8 @@ defmodule Minesweeper.Scene.Home do
   import Scenic.Primitives
   import Scenic.Components
 
+  # todo add game to current state ?
+
   @note "Init example scenic"
   @text_size 24
   @test_str "lala "
@@ -18,28 +20,31 @@ defmodule Minesweeper.Scene.Home do
   @grid_height 9
   @mines 10
 
-  @grid Game.get_indices(@grid_width, @grid_height)
-  |> Enum.map(
-    fn({x, y}) ->
-      rect_spec(
-        {@field_size, @field_size},
-        stroke: {1, :white},
-        translate: Game.get_field_translate({x, y}, @field_size),
-        id: {x, y}
-      )
-    end
-  )
-
-  @graph Graph.build(font: :roboto, font_size: @text_size)
-  |> add_specs_to_graph([
-    rect_spec({@window_width, @window_height}),
-    text_spec(@note, translate: {400, 300}),
-    text_spec("Event received:", translate: {400, 350}, id: :testid),
-    group_spec(@grid, translate: {@grid_offset, @grid_offset})
-  ])
-
   def init(_, _opts) do
-    {:ok, @graph, push: @graph}
+    game = Game.new(%{width: @grid_width, height: @grid_height, mines: @mines})
+    Logger.info(inspect(game))
+
+    grid = Enum.map(
+      Map.keys(game),
+      fn({x, y}) ->
+        rect_spec(
+          {@field_size, @field_size},
+          stroke: {1, :white},
+          translate: Game.get_field_translate({x, y}, @field_size),
+          id: {x, y}
+        )
+      end
+    )
+
+    graph = Graph.build(font: :roboto, font_size: @text_size)
+    |> add_specs_to_graph([
+      rect_spec({@window_width, @window_height}),
+      text_spec(@note, translate: {400, 300}),
+      text_spec("Event received:", translate: {400, 350}, id: :testid),
+      group_spec(grid, translate: {@grid_offset, @grid_offset})
+    ])
+
+    {:ok, graph, push: graph}
   end
 
   def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, state) do
@@ -52,7 +57,7 @@ defmodule Minesweeper.Scene.Home do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
     Logger.info("left click captured (#{x}, #{y})")
     Logger.info("#{inspect(state)}")
-    state = state |> Graph.modify({x, y}, &rect(&1, {30, 30}, fill: :white, stroke: {1, :white}))
+    state = Graph.modify(state, {x, y}, &rect(&1, {30, 30}, fill: :white, stroke: {1, :white}))
     {:noreply, state, push: state}
   end
 
