@@ -42,17 +42,18 @@ defmodule Minesweeper.Scene.Home do
   end
 
   def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, state) do
-    Logger.info("right click captured")
+    {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
+    Logger.info("right click captured (#{x}, #{y})")
     {:noreply, state}
   end
 
   def handle_input({:cursor_button, {:left, :release, _, {coord_x, coord_y}}}, _, state) do
-    Logger.info("left click captured")
+    {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
+    Logger.info("left click captured (#{x}, #{y})")
     {:noreply, state}
   end
 
   def handle_input(_, _, state) do
-    Logger.info("other event")
     {:noreply, state}
   end
 
