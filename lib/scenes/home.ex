@@ -9,26 +9,30 @@ defmodule Minesweeper.Scene.Home do
   @note "Init example scenic"
   @text_size 24
 
-  @width 1024
-  @height 720
+  @window_width 1024
+  @window_height 720
+  @field_size 30
+  @grid_width 9
+  @grid_height 9
+  @mines 10
 
   @grid [
     rect_spec(
-      {30, 30},
+      {@field_size, @field_size},
       stroke: {1, :white},
       translate: {0, 0}
     ),
     rect_spec(
-      {30, 30},
+      {@field_size, @field_size},
       stroke: {1, :white},
-      translate: {30, 0}
+      translate: {@field_size, 0}
     ),
   ]
 
   @graph Graph.build(font: :roboto, font_size: @text_size)
     |> add_specs_to_graph([
       text_spec(@note, translate: {300, 200}),
-      rect_spec({@width, @height}),
+      rect_spec({@window_width, @window_height}),
       group_spec(@grid, translate: {20, 20})
     ])
 
