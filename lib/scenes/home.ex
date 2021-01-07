@@ -12,24 +12,10 @@ defmodule Minesweeper.Scene.Home do
   @window_width 1024
   @window_height 720
   @field_size 30
-
+  @grid_offset 50
   @grid_width 9
   @grid_height 9
   @mines 10
-
-  @grid [
-    rect_spec(
-      {@field_size, @field_size},
-      stroke: {1, :white},
-      translate: {0, 0},
-      lala: 99
-    ),
-    rect_spec(
-      {@field_size, @field_size},
-      stroke: {1, :white},
-      translate: {@field_size, 0}
-    ),
-  ]
 
   @grid Game.get_indices(@grid_width, @grid_height)
   |> Enum.map(
@@ -48,8 +34,8 @@ defmodule Minesweeper.Scene.Home do
     text_spec(@note, translate: {300, 300}),
     button_spec("Dark", id: :btn_dark, t: {300, 400}, theme: :dark),
     text_spec("Event received:", translate: {300, 350}, id: :event),
-    # rect_spec({@window_width, @window_height}),
-    group_spec(@grid, translate: {20, 20})
+    rect_spec({@window_width, @window_height}),
+    group_spec(@grid, translate: {@grid_offset, @grid_offset})
   ])
 
   @event_str "Event received: "
