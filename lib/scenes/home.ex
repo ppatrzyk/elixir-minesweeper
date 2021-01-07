@@ -5,7 +5,6 @@ defmodule Minesweeper.Scene.Home do
   alias Scenic.Graph
   import Scenic.Primitives
   import Scenic.Components
-  alias Minesweeper.Component.Field
 
   @note "Init example scenic"
   @text_size 24
@@ -45,12 +44,10 @@ defmodule Minesweeper.Scene.Home do
   )
 
   @graph Graph.build(font: :roboto, font_size: @text_size)
-  |> Field.add_to_graph(id: :chuj)
   |> add_specs_to_graph([
     text_spec(@note, translate: {300, 300}),
-    text_spec("Event received:", translate: {300, 350}, id: :event),
     button_spec("Dark", id: :btn_dark, t: {300, 400}, theme: :dark),
-
+    text_spec("Event received:", translate: {300, 350}, id: :event),
     # rect_spec({@window_width, @window_height}),
     group_spec(@grid, translate: {20, 20})
   ])
