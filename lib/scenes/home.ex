@@ -52,7 +52,7 @@ defmodule Minesweeper.Scene.Home do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
     Logger.info("left click captured (#{x}, #{y})")
     Logger.info("#{inspect(state)}")
-    state = state |> Graph.modify(:testid, &text(&1, "new text"))
+    state = state |> Graph.modify({x, y}, &rect(&1, {30, 30}, fill: :white, stroke: {1, :white}))
     {:noreply, state, push: state}
   end
 
