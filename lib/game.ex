@@ -36,9 +36,10 @@ defmodule Game do
   end
 
   def reveal(game, {x, y}) do
-    case game[{x, y}].state do
-      :hidden -> do_reveal(game, {x, y})
-      _ -> game
+    cond do
+      {x, y} not in Map.keys(game) -> game
+      game[{x, y}].state == :hidden -> do_reveal(game, {x, y})
+      true -> game
     end
   end
 
@@ -69,10 +70,11 @@ defmodule Game do
   end
 
   def flag(game, {x, y}) do
-    case game[{x, y}].state do
-      :revealed -> game
-      :hidden -> %{game | {x, y} => %{game[{x, y}] | :state => :flagged}}
-      :flagged -> %{game | {x, y} => %{game[{x, y}] | :state => :hidden}}
+    cond do
+      {x, y} not in Map.keys(game) -> game
+      game[{x, y}].state == :revealed -> game
+      game[{x, y}].state == :hidden -> %{game | {x, y} => %{game[{x, y}] | :state => :flagged}}
+      game[{x, y}].state == :flagged -> %{game | {x, y} => %{game[{x, y}] | :state => :hidden}}
     end
   end
 
