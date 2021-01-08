@@ -7,7 +7,7 @@ defmodule Minesweeper.Scene.Home do
   import Scenic.Components
 
   @field_size 30
-  @grid_offset 50
+  @grid_offset 100
   @grid_width 9
   @grid_height 9
   @mines 10
@@ -66,6 +66,7 @@ defmodule Minesweeper.Scene.Home do
     |> add_specs_to_graph([
       rect_spec({@window_width, @window_height}),
       text_spec(message, translate: {@window_width/2, 20}),
+      button_spec("Restart", id: :restart, theme: :primary, translate: {@window_width/2, 40}),
       group_spec(annotations, translate: {@grid_offset, @grid_offset}),
       group_spec(grid, translate: {@grid_offset, @grid_offset})
     ])
@@ -87,6 +88,11 @@ defmodule Minesweeper.Scene.Home do
 
   def handle_input(_, _, {game, graph}) do
     {:noreply, {game, graph}}
+  end
+
+  def filter_event(_event, _, {_game, _graph}) do
+    # this crashes scene (?)
+    init(true, true)
   end
 
 end

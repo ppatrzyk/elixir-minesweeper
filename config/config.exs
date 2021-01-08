@@ -2,7 +2,7 @@ use Mix.Config
 
 config :minesweeper, :viewport, %{
   name: :main_viewport,
-  size: {370, 370},
+  size: {470, 470},
   default_scene: {Minesweeper.Scene.Home, nil},
   drivers: [
     %{
