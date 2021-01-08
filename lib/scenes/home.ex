@@ -23,7 +23,11 @@ defmodule Minesweeper.Scene.Home do
   def init(_, _opts) do
     game = Game.new(%{width: @grid_width, height: @grid_height, mines: @mines})
     Logger.info(inspect(game))
+    graph = make_grid(game)
+    {:ok, {game, graph}, push: graph}
+  end
 
+  def make_grid(game) do
     grid = Enum.map(
       game,
       fn({{x, y}, field}) ->
@@ -56,7 +60,7 @@ defmodule Minesweeper.Scene.Home do
       end
     )
 
-    graph = Graph.build(font: :roboto, font_size: @text_size)
+    Graph.build(font: :roboto, font_size: @text_size)
     |> add_specs_to_graph([
       rect_spec({@window_width, @window_height}),
       text_spec(@note, translate: {400, 300}),
@@ -64,8 +68,6 @@ defmodule Minesweeper.Scene.Home do
       group_spec(grid, translate: {@grid_offset, @grid_offset}),
       group_spec(annotations, translate: {@grid_offset, @grid_offset})
     ])
-
-    {:ok, {game, graph}, push: graph}
   end
 
   def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, {game, graph}) do
