@@ -70,15 +70,20 @@ defmodule Game do
   end
 
   def flag(game, {x, y}) do
-    mines = Enum.filter(game, fn({{_x, _y}, field}) -> field.mine end) |> length
-    flagged = Enum.filter(game, fn({{_x, _y}, field}) -> field.state == :flagged end) |> length
+    remaining_flags = get_remaining_flags(game)
     cond do
       {x, y} not in Map.keys(game) -> game
-      flagged >= mines and game[{x, y}].state != :flagged-> game
+      remaining_flags <= 0 and game[{x, y}].state != :flagged -> game
       game[{x, y}].state == :revealed -> game
       game[{x, y}].state == :hidden -> %{game | {x, y} => %{game[{x, y}] | :state => :flagged}}
       game[{x, y}].state == :flagged -> %{game | {x, y} => %{game[{x, y}] | :state => :hidden}}
     end
+  end
+
+  def get_remaining_flags(game) do
+    mines = Enum.filter(game, fn({{_x, _y}, field}) -> field.mine end) |> length
+    flagged = Enum.filter(game, fn({{_x, _y}, field}) -> field.state == :flagged end) |> length
+    mines - flagged
   end
 
   def game_check(game) do
@@ -86,10 +91,11 @@ defmodule Game do
       game,
       fn({_index, field}) -> field.state == :revealed end
     )
+    remaining_flags = get_remaining_flags(game)
     cond do
-      Enum.any?(revealed, fn({_index, field}) -> field.mine end) -> :lose
-      Enum.all?(hidden, fn({_index, field}) -> field.mine end) -> :win
-      true -> :continue
+      Enum.any?(revealed, fn({_index, field}) -> field.mine end) -> {:lose, ""}
+      Enum.all?(hidden, fn({_index, field}) -> field.mine end) -> {:win, ""}
+      true -> {:continue, Integer.to_string(remaining_flags)}
     end
   end
 

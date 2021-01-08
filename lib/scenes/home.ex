@@ -54,10 +54,10 @@ defmodule Minesweeper.Scene.Home do
       end
     )
 
-    state = Game.game_check(game)
+    {state, remaining_flags} = Game.game_check(game)
     Logger.info(Atom.to_string(state))
     message = case state do
-      :continue -> "Play"
+      :continue -> "Play, remaining flags: " <> remaining_flags
       :win -> "You won!"
       :lose -> "You lost!"
     end
