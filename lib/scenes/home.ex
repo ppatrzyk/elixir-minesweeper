@@ -70,19 +70,21 @@ defmodule Minesweeper.Scene.Home do
     ])
   end
 
-  def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, {game, graph}) do
+  def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, {game, _graph}) do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
     game = Game.flag(game, {x, y})
-    Logger.info("Flagging (#{x}, #{y})")
+    Logger.info(Game.game_check(game))
+    graph = make_grid(game)
     {:noreply, {game, graph}}
   end
 
-  def handle_input({:cursor_button, {:left, :release, _, {coord_x, coord_y}}}, _, {game, graph}) do
+  def handle_input({:cursor_button, {:left, :release, _, {coord_x, coord_y}}}, _, {game, _graph}) do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
     game = Game.reveal(game, {x, y})
-    Logger.info("Reveal (#{x}, #{y})")
+    Logger.info(Game.game_check(game))
     # Logger.info("#{inspect(game)}")
-    graph = Graph.modify(graph, {x, y}, &rect(&1, {30, 30}, fill: :white, stroke: {1, :white}))
+    # graph = Graph.modify(graph, {x, y}, &rect(&1, {30, 30}, fill: :white, stroke: {1, :white}))
+    graph = make_grid(game)
     {:noreply, {game, graph}, push: graph}
   end
 
