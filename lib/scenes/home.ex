@@ -65,27 +65,29 @@ defmodule Minesweeper.Scene.Home do
       rect_spec({@window_width, @window_height}),
       text_spec(@note, translate: {400, 300}),
       text_spec("Event received:", translate: {400, 350}, id: :testid),
-      group_spec(grid, translate: {@grid_offset, @grid_offset}),
-      group_spec(annotations, translate: {@grid_offset, @grid_offset})
+      group_spec(annotations, translate: {@grid_offset, @grid_offset}),
+      group_spec(grid, translate: {@grid_offset, @grid_offset})
     ])
   end
 
   def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, {game, _graph}) do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
+    Logger.info(inspect(game[{x, y}]))
     game = Game.flag(game, {x, y})
+    Logger.info(inspect(game[{x, y}]))
     state = Game.game_check(game)
     Logger.info(Atom.to_string(state))
     graph = make_grid(game)
-    {:noreply, {game, graph}}
+    {:noreply, {game, graph}, push: graph}
   end
 
   def handle_input({:cursor_button, {:left, :release, _, {coord_x, coord_y}}}, _, {game, _graph}) do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
+    Logger.info(inspect(game[{x, y}]))
     game = Game.reveal(game, {x, y})
+    Logger.info(inspect(game[{x, y}]))
     state = Game.game_check(game)
     Logger.info(Atom.to_string(state))
-    # Logger.info("#{inspect(game)}")
-    # graph = Graph.modify(graph, {x, y}, &rect(&1, {30, 30}, fill: :white, stroke: {1, :white}))
     graph = make_grid(game)
     {:noreply, {game, graph}, push: graph}
   end
@@ -93,7 +95,5 @@ defmodule Minesweeper.Scene.Home do
   def handle_input(_, _, {game, graph}) do
     {:noreply, {game, graph}}
   end
-
-  # graph = Graph.modify(graph, :event, &text(&1, @event_str <> inspect(event)))
 
 end
