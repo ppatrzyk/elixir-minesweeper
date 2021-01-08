@@ -64,14 +64,16 @@ defmodule Minesweeper.Scene.Home do
 
   def handle_input({:cursor_button, {:right, :release, _, {coord_x, coord_y}}}, _, {game, graph}) do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
-    Logger.info("right click captured (#{x}, #{y})")
+    game = Game.flag(game, {x, y})
+    Logger.info("Flagging (#{x}, #{y})")
     {:noreply, {game, graph}}
   end
 
   def handle_input({:cursor_button, {:left, :release, _, {coord_x, coord_y}}}, _, {game, graph}) do
     {x, y} = Game.coord_to_index({coord_x, coord_y}, @grid_offset, @field_size)
-    Logger.info("left click captured (#{x}, #{y})")
-    Logger.info("#{inspect(game)}")
+    game = Game.reveal(game, {x, y})
+    Logger.info("Reveal (#{x}, #{y})")
+    # Logger.info("#{inspect(game)}")
     graph = Graph.modify(graph, {x, y}, &rect(&1, {30, 30}, fill: :white, stroke: {1, :white}))
     {:noreply, {game, graph}, push: graph}
   end
