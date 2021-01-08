@@ -25,12 +25,18 @@ defmodule Minesweeper.Scene.Home do
     Logger.info(inspect(game))
 
     grid = Enum.map(
-      Map.keys(game),
-      fn({x, y}) ->
+      game,
+      fn({{x, y}, field}) ->
+        fill = case field.state do
+          :hidden -> :white
+          :flagged -> :red
+          :revealed -> {:white, 0}
+        end
         rect_spec(
           {@field_size, @field_size},
-          stroke: {1, :white},
+          stroke: {1, :gray},
           translate: Game.get_field_translate({x, y}, @field_size),
+          fill: fill,
           id: {x, y}
         )
       end
