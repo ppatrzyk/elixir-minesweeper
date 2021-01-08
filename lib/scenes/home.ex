@@ -62,12 +62,16 @@ defmodule Minesweeper.Scene.Home do
 
     state = Game.game_check(game)
     Logger.info(Atom.to_string(state))
+    message = case state do
+      :continue -> "Play"
+      :win -> "You won!"
+      :lose -> "You lost!"
+    end
 
     Graph.build(font: :roboto, font_size: @text_size)
     |> add_specs_to_graph([
       rect_spec({@window_width, @window_height}),
-      text_spec(@note, translate: {400, 300}),
-      text_spec(Atom.to_string(state), translate: {400, 350}),
+      text_spec(message, translate: {@window_width/2, 20}),
       group_spec(annotations, translate: {@grid_offset, @grid_offset}),
       group_spec(grid, translate: {@grid_offset, @grid_offset})
     ])
