@@ -22,6 +22,7 @@ defmodule Minesweeper.Scene.Home do
 
   def init(_, _opts) do
     game = Game.new(%{width: @grid_width, height: @grid_height, mines: @mines})
+    Logger.info(inspect(game))
 
     grid = Enum.map(
       Map.keys(game),
@@ -43,11 +44,11 @@ defmodule Minesweeper.Scene.Home do
           field.adjacent > 0 -> "#{field.adjacent}"
           true -> ""
         end
-        # todo this offset is broken
-        text_spec(str, translate: Game.get_field_translate({x, y}, @field_size))
+        {trans_x, trans_y} = Game.get_field_translate({x, y}, @field_size)
+        {trans_x, trans_y} = {trans_x + @field_size*1/3, trans_y + @field_size*2/3}
+        text_spec(str, translate: {trans_x, trans_y})
       end
     )
-    Logger.info(annotations)
 
     graph = Graph.build(font: :roboto, font_size: @text_size)
     |> add_specs_to_graph([
