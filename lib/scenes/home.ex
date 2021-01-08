@@ -6,23 +6,17 @@ defmodule Minesweeper.Scene.Home do
   import Scenic.Primitives
   import Scenic.Components
 
-  # todo add game to current state ?
-
-  @note "Init example scenic"
-  @text_size 24
-  @test_str "lala "
-
-  @window_width 1024
-  @window_height 720
   @field_size 30
   @grid_offset 50
   @grid_width 9
   @grid_height 9
   @mines 10
+  @text_size 24
+  @window_width (@grid_width*@field_size + @grid_offset*2)
+  @window_height (@grid_height*@field_size + @grid_offset*2)
 
   def init(_, _opts) do
     game = Game.new(%{width: @grid_width, height: @grid_height, mines: @mines})
-    Logger.info(inspect(game))
     graph = make_grid(game)
     {:ok, {game, graph}, push: graph}
   end
